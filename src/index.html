@@ -3,12 +3,15 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
   <title>Skyjo</title>
-  <style>
-    @tailwind base;
-    @tailwind components;
-    @tailwind utilities;
-  </style>
+  
+  <link rel="shortcut icon" href="./icons/favicon.ico" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <meta name="theme-color" content="#6b7280" />
+  <link rel="manifest" href="./site.webmanifest">
+  
+  <link rel="stylesheet" href="./styles/app.css">
 </head>
 <body class="font-sans antialiased bg-gray-100 text-gray-500 pb-6">
   <div x-data="skyjo">
@@ -83,116 +86,35 @@
     </template>
   </div>
 
-  <script type="module">
-    import Alpine from 'alpinejs';
+  <script>
+    const sw = "service-worker.js"; // it is needed because parcel will not recognize this as a file and not precess in its manner
 
-    Alpine.data('skyjo', () => ({
-      players: Array.from({ length: 8 }, () => ''),
-      round: -1,
-      rounds: [],
-
-      init() {
-        const players = window.localStorage.getItem('skyjo_players');
-        if (players) {
-          this.players = JSON.parse(players);
-        }
-
-        const round = window.localStorage.getItem('skyjo_round');
-        if (round) {
-          this.round = parseInt(round);
-        }
-
-        const rounds = window.localStorage.getItem('skyjo_rounds');
-        if (rounds) {
-          this.rounds = JSON.parse(rounds);
-        }
-
-        Alpine.effect(() => {
-          window.localStorage.setItem('skyjo_players', JSON.stringify(this.players));
-          window.localStorage.setItem('skyjo_round', this.round);
-          window.localStorage.setItem('skyjo_rounds', JSON.stringify(this.rounds));
-        });
-      },
-
-      activePlayers() {
-        return this.players.filter(player => player !== '');
-      },
-
-      activePlayersShort() {
-        return this.activePlayers().map(player => player.substr(0, 3).toUpperCase());
-      },
-
-      nextRound() {
-        if (this.round === -1 && this.activePlayers().length < 2) {
-          alert("Mindestens zwei Spieler müssen angegeben werden.");
-          return;
-        }
-
-        if (this.round >= 0) {
-          if (this.rounds[this.round].points.some(points => points === '')) {
-            alert("Alle Punkte müssen angegeben werden.");
+    navigator.serviceWorker
+      .register(sw)
+      .then(registration => {
+        registration.onupdatefound = () => {
+          const installingWorker = registration.installing;
+          if (installingWorker == null) {
             return;
           }
-
-          if (this.rounds[this.round].points.some(points => isNaN(parseInt(points, 10)))) {
-            alert("Alle Punkte müssen Zahlen sein.");
-            return;
-          }
-
-          if (this.rounds[this.round].finisher === null) {
-            alert("Der Spieler, welcher die Runde beendet hat muss angegeben werden.");
-            return;
-          }
-        }
-
-        if (this.round === this.rounds.length - 1) {
-          this.rounds.push({
-            points: Array.from({ length: this.activePlayers().length }, () => ''),
-            finisher: null,
-          });
-        }
-
-        this.round = this.round + 1;
-      },
-
-      prevRound() {
-        this.round = this.round - 1;
-      },
-
-      roundsPoints() {
-        return this.rounds
-          .slice(0, this.rounds.length - 1)
-          .map(round => {
-            const points = round.points.map(points => parseInt(points, 10));
-            const finisherPoints = points[round.finisher];
-
-            // Double points if finisher didn't come in first
-            if (finisherPoints > 0 && points.some(points => points >= finisherPoints)) {
-              points[round.finisher] = finisherPoints * 2;
+          installingWorker.onstatechange = () => {
+            if (installingWorker.state === "installed") {
+              if (navigator.serviceWorker.controller) {
+                console.log(
+                  "New content is available and will be used when all " +
+                    "tabs for this page are closed. See https://bit.ly/CRA-PWA."
+                );
+              } else {
+                console.log("Content is cached for offline use.");
+              }
             }
-
-            return points;
-          });
-      },
-
-      totalPoints() {
-        return this.roundsPoints().reduce(
-          (points, roundPoints) => points.map((p, i) => p + roundPoints[i]),
-          Array.from({ length: this.activePlayers().length }, () => 0)
-        );
-      },
-
-      reset() {
-        if (!confirm("Wirklich zurücksetzen?")) {
-          return;
-        }
-
-        this.round = -1;
-        this.rounds = [];
-      },
-    }));
-
-    Alpine.start();
+          };
+        };
+      })
+      .catch(error => {
+        console.error("Error during service worker registration:", error);
+      });
   </script>
+  <script type="module" src="./scripts/app.js"></script>
 </body>
 </html>

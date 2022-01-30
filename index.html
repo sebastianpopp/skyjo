@@ -6,7 +6,7 @@
   <title>Skyjo</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="font-sans antialiased bg-gray-100 text-gray-500">
+<body class="font-sans antialiased bg-gray-100 text-gray-500 pb-6">
   <div x-data="skyjo">
     <h1 class="sticky top-0 z-10 w-full bg-white px-6 py-3 text-center font-semibold text-2xl leading-tight border-b border-b-gray-300 shadow">Skyjo</h1>
 
@@ -35,7 +35,7 @@
             <div class="bg-white mx-6 p-3 shadow rounded text-gray-700">
               <table class="w-full">
                 <thead>
-                  <tr>
+                  <tr class="border-b">
                     <template x-for="(player, i) in activePlayersShort()" :key="i">
                       <th class="text-sm text-center font-bold" x-text="player"></th>
                     </template>
@@ -48,6 +48,11 @@
                       </template>
                     </tr>
                   </template>
+                  <tr class="border-t">
+                    <template x-for="(p, i) in totalPoints()" :key="i">
+                      <td class="text-sm text-center font-bold" x-text="p"></td>
+                    </template>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -175,17 +180,16 @@
             return points;
           };
 
-          const rounds = this.rounds
+          return this.rounds
             .slice(0, this.rounds.length - 1)
             .map(round => roundPoints(round));
+        },
 
-          return rounds.map((points, i) => {
-            if (i === 0) {
-              return points;
-            }
-
-            return points.map((point, j) => point + rounds[i - 1][j]);
-          });
+        totalPoints() {
+          return this.roundsPoints().reduce(
+            (points, roundPoints) => points.map((p, i) => p + roundPoints[i]),
+            Array.from({ length: this.activePlayers().length }, () => 0)
+          );
         },
 
         reset() {

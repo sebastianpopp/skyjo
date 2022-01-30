@@ -1,0 +1,180 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skyjo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans antialiased bg-gray-100 text-gray-500">
+  <div x-data="skyjo">
+    <h1 class="sticky top-0 z-10 w-full bg-white px-6 py-3 text-center font-semibold text-2xl leading-tight border-b border-b-gray-300 shadow">Skyjo</h1>
+
+    <template x-if="round === -1">
+      <div>
+        <h2 class="mt-6 mx-7 mb-2 text-sm">Spieler</h2>
+        <div class="bg-white mx-6 p-3 shadow rounded">
+          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" placeholder="Spieler 1" x-model="players[0]">
+          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" placeholder="Spieler 2" x-model="players[1]">
+          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" placeholder="Spieler 3" x-model="players[2]">
+          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" placeholder="Spieler 4" x-model="players[3]">
+          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" placeholder="Spieler 5" x-model="players[4]">
+          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" placeholder="Spieler 6" x-model="players[5]">
+          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" placeholder="Spieler 7" x-model="players[6]">
+          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" placeholder="Spieler 8" x-model="players[7]">
+          <button class="w-full border bg-teal-500 text-white border-teal-500 px-2 py-1 rounded active:bg-teal-700" x-on:click="nextRound()">Start</button>
+        </div>
+      </div>
+    </template>
+
+    <template x-if="round >= 0">
+      <div>
+        <template x-if="rounds.length > 1">
+          <div>
+            <h2 class="mt-6 mx-7 mb-2 text-sm">Spielstände</h2>
+            <div class="bg-white mx-6 p-3 shadow rounded text-gray-700">
+              <table class="w-full">
+                <thead>
+                  <tr>
+                    <template x-for="(player, i) in activePlayersShort()" :key="i">
+                      <th class="text-sm text-center font-bold" x-text="player"></th>
+                    </template>
+                </thead>
+                <tbody>
+                  <template x-for="(points, i) in roundsPoints()" :key="i">
+                    <tr>
+                      <template x-for="(p, j) in points" :key="j">
+                        <td class="text-sm text-center" x-text="p"></td>
+                      </template>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </template>
+
+        <h2 class="mt-6 mx-7 mb-2 text-sm">Runde <span x-text="round + 1"></span></h2>
+        <div class="bg-white mx-6 p-3 shadow rounded">
+          <template x-for="(player, index) in activePlayers()" :key="index">
+            <div class="flex items-center mb-2">
+              <input type="number" class="w-full border border-gray-300 px-2 py-1 rounded outline-teal-500" x-bind:placeholder="player" x-model="rounds[round].points[index]">
+              <div class="form-check">
+                <input class="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-teal-500 checked:border-teal-500 focus:outline-none transition duration-200 ml-2 cursor-pointer" type="radio" name="finisher" x-model="rounds[round].finisher" x-bind:value="index">
+              </div>
+            </div>
+          </template>
+          <button class="w-full border bg-teal-500 text-white border-teal-500 px-2 py-1 rounded active:bg-teal-700" x-on:click="nextRound()">Nächste Runde</button>
+          <div class="flex">
+            <button x-show="round > 0" class="flex-1 text-sm border bg-gray-500 text-white border-gray-500 px-2 py-1 rounded active:bg-gray-700 mt-2 mr-2" x-on:click="prevRound()">Vorherige Runde korrigieren</button>
+            <button class="flex-1 text-sm border bg-gray-500 text-white border-gray-500 px-2 py-1 rounded active:bg-gray-700 mt-2" x-on:click="reset()">Spiel zurücksetzen</button>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+  
+  <script src="//unpkg.com/alpinejs" defer></script>
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('skyjo', () => ({
+        players: [
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+        ],
+        round: -1,
+        rounds: [],
+
+        activePlayers() {
+          return this.players.filter(player => player !== '');
+        },
+
+        activePlayersShort() {
+          return this.activePlayers().map(player => player.substr(0, 3).toUpperCase());
+        },
+
+        roundsPoints() {
+          return this.rounds.filter()
+        },
+
+        nextRound() {
+          if (this.round === -1 && this.activePlayers().length < 2) {
+            alert("Mindestens zwei Spieler müssen angegeben werden.");
+            return;
+          }
+
+          if (this.round >= 0) {
+            if (this.rounds[this.round].points.some(points => points === '')) {
+              alert("Alle Punkte müssen angegeben werden.");
+              return;
+            }
+
+            if (this.rounds[this.round].points.some(points => isNaN(parseInt(points, 10)))) {
+              alert("Alle Punkte müssen Zahlen sein.");
+              return;
+            }
+
+            if (this.rounds[this.round].finisher === null) {
+              alert("Der Spieler, welcher die Runde beendet hat muss angegeben werden.");
+              return;
+            }
+          }
+
+          if (this.round === this.rounds.length - 1) {
+            this.rounds.push({
+              points: Array.from({ length: this.activePlayers().length }, () => ''),
+              finisher: null,
+            });
+          }
+
+          this.round = this.round + 1;
+        },
+
+        prevRound() {
+          this.round = this.round - 1;
+        },
+
+        roundsPoints() {
+          const roundPoints = round => {
+            const points = round.points.map(points => parseInt(points, 10));
+            const finisherPoints = points[round.finisher];
+
+            if (finisherPoints > 0 && points.some(points => points >= finisherPoints)) {
+              points[round.finisher] = finisherPoints * 2;
+            }
+
+            return points;
+          };
+
+          const rounds = this.rounds
+            .slice(0, this.rounds.length - 1)
+            .map(round => roundPoints(round));
+
+          return rounds.map((points, i) => {
+            if (i === 0) {
+              return points;
+            }
+
+            return points.map((point, j) => point + rounds[i - 1][j]);
+          });
+        },
+
+        reset() {
+          if (!confirm("Wirklich zurücksetzen?")) {
+            return;
+          }
+
+          this.round = -1;
+          this.rounds = [];
+        },
+      }));
+    })
+  </script>
+</body>
+</html>

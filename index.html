@@ -83,16 +83,7 @@
   <script>
     document.addEventListener('alpine:init', () => {
       Alpine.data('skyjo', () => ({
-        players: [
-          '',
-          '',
-          '',
-          '',
-          '',
-          '',
-          '',
-          '',
-        ],
+        players: Array.from({ length: 8 }, () => ''),
         round: -1,
         rounds: [],
 
@@ -125,10 +116,6 @@
 
         activePlayersShort() {
           return this.activePlayers().map(player => player.substr(0, 3).toUpperCase());
-        },
-
-        roundsPoints() {
-          return this.rounds.filter()
         },
 
         nextRound() {
@@ -169,20 +156,19 @@
         },
 
         roundsPoints() {
-          const roundPoints = round => {
-            const points = round.points.map(points => parseInt(points, 10));
-            const finisherPoints = points[round.finisher];
-
-            if (finisherPoints > 0 && points.some(points => points >= finisherPoints)) {
-              points[round.finisher] = finisherPoints * 2;
-            }
-
-            return points;
-          };
-
           return this.rounds
             .slice(0, this.rounds.length - 1)
-            .map(round => roundPoints(round));
+            .map(round => {
+              const points = round.points.map(points => parseInt(points, 10));
+              const finisherPoints = points[round.finisher];
+
+              // Double points if finisher didn't come in first
+              if (finisherPoints > 0 && points.some(points => points >= finisherPoints)) {
+                points[round.finisher] = finisherPoints * 2;
+              }
+
+              return points;
+            });
         },
 
         totalPoints() {

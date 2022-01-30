@@ -91,6 +91,29 @@
         round: -1,
         rounds: [],
 
+        init() {
+          const players = window.localStorage.getItem('skyjo_players');
+          if (players) {
+            this.players = JSON.parse(players);
+          }
+
+          const round = window.localStorage.getItem('skyjo_round');
+          if (round) {
+            this.round = parseInt(round);
+          }
+
+          const rounds = window.localStorage.getItem('skyjo_rounds');
+          if (rounds) {
+            this.rounds = JSON.parse(rounds);
+          }
+
+          Alpine.effect(() => {
+            window.localStorage.setItem('skyjo_players', JSON.stringify(this.players));
+            window.localStorage.setItem('skyjo_round', this.round);
+            window.localStorage.setItem('skyjo_rounds', JSON.stringify(this.rounds));
+          });
+        },
+
         activePlayers() {
           return this.players.filter(player => player !== '');
         },

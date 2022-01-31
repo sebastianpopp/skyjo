@@ -79,9 +79,10 @@ Alpine.data('skyjo', () => ({
       .map(round => {
         const points = round.points.map(points => parseInt(points, 10));
         const finisherPoints = points[round.finisher];
+        const othersPoints = points.filter((_, index) => index != round.finisher);
 
         // Double points if finisher didn't come in first
-        if (finisherPoints > 0 && points.some(points => points >= finisherPoints)) {
+        if (finisherPoints > 0 && othersPoints.some(p => p <= finisherPoints)) {
           points[round.finisher] = finisherPoints * 2;
         }
 

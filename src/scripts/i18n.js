@@ -31,8 +31,14 @@ class i18n {
     const languages = navigator.languages;
 
     for (let i = 0; i < languages.length; i++) {
-      if (typeof this._locales[languages[i]] !== "undefined") {
-        return languages[i];
+      let language = languages[i];
+
+      if (language.indexOf('-') !== -1) {
+        language = language.split('-')[0];
+      }
+
+      if (typeof this._locales[language] !== "undefined") {
+        return language;
       }
     }
 

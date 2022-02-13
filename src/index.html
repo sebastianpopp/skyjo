@@ -19,17 +19,17 @@
 
     <template x-if="round === -1">
       <div>
-        <h2 class="mt-6 mx-7 mb-2 text-sm">Spieler</h2>
+        <h2 class="mt-6 mx-7 mb-2 text-sm" x-text="__('Players')"></h2>
         <div class="bg-white mx-6 p-3 shadow rounded">
-          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" placeholder="Spieler 1" x-model="players[0]">
-          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" placeholder="Spieler 2" x-model="players[1]">
-          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" placeholder="Spieler 3" x-model="players[2]">
-          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" placeholder="Spieler 4" x-model="players[3]">
-          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" placeholder="Spieler 5" x-model="players[4]">
-          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" placeholder="Spieler 6" x-model="players[5]">
-          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" placeholder="Spieler 7" x-model="players[6]">
-          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" placeholder="Spieler 8" x-model="players[7]">
-          <button class="w-full border bg-teal-500 text-white border-teal-500 px-2 py-1 rounded active:bg-teal-700" x-on:click="nextRound()">Start</button>
+          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" x-bind:placeholder="__('Player :n', { n: 1 })" x-model="players[0]">
+          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" x-bind:placeholder="__('Player :n', { n: 2 })" x-model="players[1]">
+          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" x-bind:placeholder="__('Player :n', { n: 3 })" x-model="players[2]">
+          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" x-bind:placeholder="__('Player :n', { n: 4 })" x-model="players[3]">
+          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" x-bind:placeholder="__('Player :n', { n: 5 })" x-model="players[4]">
+          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" x-bind:placeholder="__('Player :n', { n: 6 })" x-model="players[5]">
+          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" x-bind:placeholder="__('Player :n', { n: 7 })" x-model="players[6]">
+          <input type="text" class="w-full border border-gray-300 px-2 py-1 rounded mb-2 outline-teal-500" x-bind:placeholder="__('Player :n', { n: 8 })" x-model="players[7]">
+          <button class="w-full border bg-teal-500 text-white border-teal-500 px-2 py-1 rounded active:bg-teal-700" x-on:click="nextRound()" x-text="__('Start')"></button>
         </div>
       </div>
     </template>
@@ -38,7 +38,7 @@
       <div>
         <template x-if="rounds.length > 1">
           <div>
-            <h2 class="mt-6 mx-7 mb-2 text-sm">Spielstände</h2>
+            <h2 class="mt-6 mx-7 mb-2 text-sm" x-text="__('Scores')"></h2>
             <div class="bg-white mx-6 p-3 shadow rounded text-gray-700">
               <table class="w-full">
                 <thead>
@@ -66,7 +66,7 @@
           </div>
         </template>
 
-        <h2 class="mt-6 mx-7 mb-2 text-sm">Runde <span x-text="round + 1"></span></h2>
+        <h2 class="mt-6 mx-7 mb-2 text-sm" x-text="__('Round :n', { n: round + 1 })"></h2>
         <div class="bg-white mx-6 p-3 shadow rounded">
           <template x-for="(player, index) in activePlayers()" :key="index">
             <div class="flex items-center mb-2">
@@ -76,10 +76,10 @@
               </div>
             </div>
           </template>
-          <button class="w-full border bg-teal-500 text-white border-teal-500 px-2 py-1 rounded active:bg-teal-700" x-on:click="nextRound()">Nächste Runde</button>
+          <button class="w-full border bg-teal-500 text-white border-teal-500 px-2 py-1 rounded active:bg-teal-700" x-on:click="nextRound()" x-text="__('Next Round')"></button>
           <div class="flex">
-            <button x-show="round > 0" class="flex-1 text-sm border bg-gray-500 text-white border-gray-500 px-2 py-1 rounded active:bg-gray-700 mt-2 mr-2" x-on:click="prevRound()">Vorherige Runde korrigieren</button>
-            <button class="flex-1 text-sm border bg-gray-500 text-white border-gray-500 px-2 py-1 rounded active:bg-gray-700 mt-2" x-on:click="reset()">Spiel zurücksetzen</button>
+            <button x-show="round > 0" class="flex-1 text-sm border bg-gray-500 text-white border-gray-500 px-2 py-1 rounded active:bg-gray-700 mt-2 mr-2" x-on:click="prevRound()" x-text="__('Correct previous round')"></button>
+            <button class="flex-1 text-sm border bg-gray-500 text-white border-gray-500 px-2 py-1 rounded active:bg-gray-700 mt-2" x-on:click="reset()" x-text="__('Reset game')"></button>
           </div>
         </div>
       </div>

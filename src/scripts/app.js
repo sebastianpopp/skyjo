@@ -1,4 +1,8 @@
 import Alpine from 'alpinejs';
+import i18n from './i18n';
+
+i18n.addLocale('de', require('../lang/de.json'));
+const __ = (key, replace = [], locale = null) => i18n.__(key, replace, locale);
 
 Alpine.data('skyjo', () => ({
   players: Array.from({ length: 8 }, () => ''),
@@ -38,23 +42,23 @@ Alpine.data('skyjo', () => ({
 
   nextRound() {
     if (this.round === -1 && this.activePlayers().length < 2) {
-      alert("Mindestens zwei Spieler müssen angegeben werden.");
+      alert(__("At least two players must be specified."));
       return;
     }
 
     if (this.round >= 0) {
       if (this.rounds[this.round].points.some(points => points === '')) {
-        alert("Alle Punkte müssen angegeben werden.");
+        alert(__("All points must be specified."));
         return;
       }
 
       if (this.rounds[this.round].points.some(points => isNaN(parseInt(points, 10)))) {
-        alert("Alle Punkte müssen Zahlen sein.");
+        alert(__("All points must be numbers."));
         return;
       }
 
       if (this.rounds[this.round].finisher === null) {
-        alert("Der Spieler, welcher die Runde beendet hat muss angegeben werden.");
+        alert(__("The player who finished the round must be specified."));
         return;
       }
     }
@@ -98,12 +102,16 @@ Alpine.data('skyjo', () => ({
   },
 
   reset() {
-    if (!confirm("Wirklich zurücksetzen?")) {
+    if (!confirm(__("Really reset?"))) {
       return;
     }
 
     this.round = -1;
     this.rounds = [];
+  },
+
+  __(key, replace = [], locale = null) {
+    return __(key, replace, locale);
   },
 }));
 

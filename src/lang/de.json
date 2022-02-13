@@ -1,0 +1,15 @@
+{
+  "At least two players must be specified.": "Mindestens zwei Spieler müssen angegeben werden.",
+  "All points must be specified.": "Alle Punkte müssen angegeben werden.",
+  "All points must be numbers.": "Alle Punkte müssen Zahlen sein.",
+  "The player who finished the round must be specified.": "Der Spieler, welcher die Runde beendet hat muss angegeben werden.",
+  "Really reset?": "Wirklich zurücksetzen?",
+  "Players": "Spieler",
+  "Player :n": "Spieler :n",
+  "Start": "Start",
+  "Scores": "Spielstände",
+  "Round :n": "Runde :n",
+  "Next Round": "Nächste Runde",
+  "Correct previous round": "Vorherige Runde korrigieren",
+  "Reset game": "Spiel zurücksetzen"
+}

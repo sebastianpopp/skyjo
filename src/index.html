@@ -12,6 +12,21 @@
   <link rel="manifest" href="./site.webmanifest">
   
   <link rel="stylesheet" href="./styles/app.css">
+
+  <script>
+    var _paq = window._paq = window._paq || [];
+    _paq.push(["disableCookies"]);
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+      var u="//metrics.popp.xyz/";
+      _paq.push(['setTrackerUrl', u+'matomo.php']);
+      _paq.push(['setSiteId', '6']);
+      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+      g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    })();
+  </script>
+  <noscript><p><img referrerpolicy="no-referrer-when-downgrade" src="//metrics.popp.xyz/matomo.php?idsite=6&amp;rec=1" style="border:0;" alt="" /></p></noscript>
 </head>
 <body class="font-sans antialiased bg-gray-100 text-gray-500 pb-6">
   <div x-data="skyjo">
